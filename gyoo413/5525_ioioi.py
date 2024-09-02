@@ -6,15 +6,17 @@ m = int(input())
 s = input()
 
 cnt = 0
-for i in range(m - 1):
-    temp_cnt = 0
-    if s[i] == 'I':
-        for j in range(i, i + 2 * n):
-            if j < m - 1 and s[j] != s[j + 1]:
-                temp_cnt += 1
+temp = 0
+for i in range(1, m):
+    if s[i] != s[i - 1]:
+        temp += 1
+        if temp == 2 * n:
+            if s[i] == 'I':
+                cnt += 1
+                temp -= 2
             else:
-                break
-        if temp_cnt == 2 * n:
-            cnt += 1
+                temp -= 1
+    else:
+        temp = 0
 
 print(cnt)
