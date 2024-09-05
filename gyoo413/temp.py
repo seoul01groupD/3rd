@@ -1,52 +1,39 @@
 import sys
 input = sys.stdin.readline
 
-arr = [list(map(int, input().split())) for _ in range(19)]
+v, e = map(int, input().split())
+lst = []
+for i in range(e):
+    lst.extend(list(map(int, input().split())))
+adjL = [[] for _ in range(v + 1)]
+for i in range(e):
+    v1, v2 = lst[2*i], lst[2*i + 1]
+    adjL[v1].append(v2)
+    adjL[v2].append(v1)
+visited = [0] * (v + 1)
 
-d = [[-1, 1], [0, 1], [1, 1], [1, 0]]
+def DFS(s, n):
+    stack = []
+    v = s
+    visited[v] = 1
+    
+    while True:
+        for w in adjL[v]:
+            if visited[w] == 0:
+                visited[w] = 1
+                stack.append(v)
+                v = w
+                break
+        else:
+            if stack:
+                v = stack.pop()
+            else:
+                break
 
-result = []  # 이긴 사람 및 가장 왼쪽 바둑알의 좌표를 저장할 리스트
-no_result = []
-
-def black(arr):
-    for i in range(19):
-        for j in range(19):
-            for k in range(4):
-                cnt = 1
-                flag = True
-                ni = i + d[k][0]
-                nj = j + d[k][1]
-                while 0 <= ni < 19 and 0 <= nj < 19 and arr[ni][nj] == 1:
-                    cnt += 1
-                    ni += d[k][0]
-                    nj += d[k][1]
-                    if cnt > 5:
-                        flag = False
-                        break
-                if flag and cnt > 4 and arr[i - d[k][0]][j - d[k][0]] != 1:
-                    r = [1, cnt, i + 1, j + 1]
-                    result.append(r)
-
-def white(arr):
-    for i in range(19):
-        for j in range(19):
-            for k in range(4):
-                cnt = 1
-                flag = True
-                ni = i + d[k][0]
-                nj = j + d[k][1]
-                while 0 <= ni < 19 and 0 <= nj < 19 and arr[ni][nj] == 2:
-                    cnt += 1
-                    ni += d[k][0]
-                    nj += d[k][1]
-                    if cnt > 5:
-                        flag = False
-                        break
-                if flag and cnt == 5 and arr[i - d[k][0]][j - d[k][0]] != 2:
-                    r = [2, cnt, i + 1, j + 1]
-                    result.append(r)
-
-black(arr), white(arr)
-
-print(result)
-
+cnt = 0
+for i in range(1, v + 1):
+    if visited[i] == 0:
+        DFS(i, v)
+        cnt += 1
+    
+print(cnt)
