@@ -1,20 +1,31 @@
-from collections import deque
 import sys
 input = sys.stdin.readline
 
 n = int(input())
-tanghuru = deque(map(int, input().split()))
-dict_tang = {}
-for i in range(n):
-    if dict_tang.get(tanghuru[i], False):
-        dict_tang[tanghuru[i]] += 1
-    else:
-        dict_tang[tanghuru[i]] = 1
+tanghuru = list(map(int, input().split()))
 
-while True:
-    k = len(tanghuru)
-    length = len(set(tanghuru))
-    if length < 3:
-        break
-    
-    
+left = 0; right = 0
+kind = {tanghuru[0]: 1}
+max_count = 1
+for right in range(1, n):
+    if tanghuru[right] != tanghuru[right - 1]:
+        if (tanghuru[right] not in kind) or kind[tanghuru[right]] == 0:
+            kind[tanghuru[right]] = 1
+            cnt = 0
+            for v in kind.values():
+                if v > 0:
+                    cnt += 1
+            while cnt > 2:
+                kind[tanghuru[left]] -= 1
+                if kind[tanghuru[left]] == 0:
+                    cnt -= 1
+                left += 1
+        else:
+            kind[tanghuru[right]] += 1
+    else:
+        kind[tanghuru[right]] += 1
+                
+    if max_count < (right - left + 1):
+        max_count = right - left + 1
+
+print(max_count)
